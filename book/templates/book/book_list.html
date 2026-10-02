@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Список книг</title>
+</head>
+<body>
+    <h1>Список всех книг</h1>
+    <ul>
+        {% for book in books %}
+            <li>
+                <strong>{{ book.title }}</strong> (Жанр: {{ book.get_genre_display }})
+                <a href="{% url 'book_detail' book.id %}">Детали</a>
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
