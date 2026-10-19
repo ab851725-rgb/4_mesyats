@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Анкета: {{ anketa.full_name }}</title>
+</head>
+<body>
+    <h1>{{ anketa.full_name }}</h1>
+    
+    {% if anketa.photo %}
+        <img src="{{ anketa.photo.url }}" alt="Фото" width="200" style="border-radius: 8px;">
+    {% endif %}
+
+    <p><strong>Желаемая должность:</strong> {{ anketa.desired_position }}</p>
+    <p><strong>Возраст:</strong> {{ anketa.age }}</p>
+    <p><strong>Пол:</strong> {{ anketa.get_gender_display }}</p>
+    <p><strong>Опыт работы:</strong> {{ anketa.experience_years }} лет</p>
+    <p><strong>Email:</strong> {{ anketa.email }}</p>
+    <p><strong>Телефон:</strong> {{ anketa.phone }}</p>
+    <p><strong>Удаленка:</strong> {% if anketa.is_remote %} Да {% else %} Нет {% endif %}</p>
+    <p><strong>О себе:</strong> {{ anketa.about }}</p>
+    <small>Дата подачи: {{ anketa.created_at|date:"d.m.Y H:i" }}</small>
+
+    <hr>
+    <a href="{% url 'anketa_update' anketa.id %}">Редактировать</a> |
+    <a href="{% url 'anketa_delete' anketa.id %}">Удалить</a> |
+    <a href="{% url 'anketa_list' %}">Назад к списку</a>
+</body>
+</html>

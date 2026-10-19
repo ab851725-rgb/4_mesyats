@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Добавление анкеты</title>
+</head>
+<body>
+    <h1>Заполнить анкету</h1>
+
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Отправить анкету</button>
+    </form>
+
+    <br>
+    <a href="{% url 'anketa_list' %}">Отмена</a>
+</body>
+</html>

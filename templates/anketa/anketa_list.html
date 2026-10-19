@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Список анкет</title>
+</head>
+<body>
+    <h1>Все анкеты соискателей</h1>
+    <a href="{% url 'anketa_create' %}">Заполнить новую анкету</a>
+    <hr>
+    <ul>
+        {% for anketa in anketas %}
+            <li>
+                <strong>{{ anketa.full_name }}</strong> — {{ anketa.desired_position }} ({{ anketa.age }} лет)
+                <br>
+                <a href="{% url 'anketa_detail' anketa.id %}">Подробнее</a> | 
+                <a href="{% url 'anketa_update' anketa.id %}">Редактировать</a> | 
+                <a href="{% url 'anketa_delete' anketa.id %}">Удалить</a>
+            </li>
+            <br>
+        {% empty %}
+            <p>Анкет пока нет. Будьте первым, кто заполнит!</p>
+        {% endfor %}
+    </ul>
+</body>
+</html>
