@@ -1,13 +1,18 @@
 from django.urls import path
-from . import views
+from .views import (
+    HelloWorldView,
+    MyFavouriteEmojiView,
+    AboutMySelfView,
+    MyFavouriteWriterView,
+    FactsAboutWriterView,
+    MyOpinionWriterView,
+)
 
 urlpatterns = [
-    path('hello_world/', views.hello_world_view),
-    path('favorite_emoji/', views.my_favourite_emoji_view),
-    path('me/', views.about_my_self_view),
-    path('favourite_writer/', views.my_favourite_writer_viev),
-    path('facts_about_writer/', views.facts_about_writer_view),
-    path('my_opinion_writer/', views.my_opinion_about_writer_view)
-    ]
-
-
+    path('hello_world/', HelloWorldView.as_view()),
+    path('favorite_emoji/', MyFavouriteEmojiView.as_view()),
+    path('me/', AboutMySelfView.as_view()),
+    path('favourite_writer/', MyFavouriteWriterView.as_view()),
+    path('facts_about_writer/', FactsAboutWriterView.as_view()),
+    path('my_opinion_writer/', MyOpinionWriterView.as_view()),
+]

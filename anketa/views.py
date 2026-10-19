@@ -1,40 +1,43 @@
-from django.shortcuts import render, get_object_or_404, redirect
+from django.views.generic import (
+    ListView,
+    DetailView,
+    CreateView,
+    UpdateView,
+    DeleteView,
+)
+from django.urls import reverse_lazy
 from .models import Anketa
 from .forms import AnketaForm
 
-# 1. READ: Список всех анкет
-def anketa_list_view(request):
-    anketas = Anketa.objects.all().order_by('-created_at')
-    return render(request, 'anketa/anketa_list.html', {'anketas': anketas})
+class AnketaListView(ListView):
+    model = Anketa
+    template_name = 'anketa/anketa_list.html'
+    context_object_name = 'anketas'
+    ordering = ['-created_at']
 
-def anketa_detail_view(request, id):
-    anketa = get_object_or_404(Anketa, id=id)
-    return render(request, 'anketa/anketa_detail.html', {'anketa': anketa})
+class AnketaDetailView(DetailView):
+    model = Anketa
+    template_name = 'anketa/anketa_detail.html'
+    context_object_name = 'anketa'
+    pk_url_kwarg = 'id'
 
-def anketa_create_view(request):
-    if request.method == 'POST':
-        form = AnketaForm(request.POST, request.FILES)
-        if form.is_valid():
-            form.save()
-            return redirect('anketa_list')
-    else:
-        form = AnketaForm()
-    return render(request, 'anketa/anketa_create.html', {'form': form})
+class AnketaCreateView(CreateView):
+    model = Anketa
+    form_class = AnketaForm
+    template_name = 'anketa/anketa_create.html'
+    success_url = reverse_lazy('anketa_list')
 
-def anketa_update_view(request, id):
-    anketa = get_object_or_404(Anketa, id=id)
-    if request.method == 'POST':
-        form = AnketaForm(request.POST, request.FILES, instance=anketa)
-        if form.is_valid():
-            form.save()
-            return redirect('anketa_detail', id=anketa.id)
-    else:
-        form = AnketaForm(instance=anketa)
-    return render(request, 'anketa/anketa_update.html', {'form': form, 'anketa': anketa})
+class AnketaUpdateView(UpdateView):
+    model = Anketa
+    form_class = AnketaForm
+    template_name = 'anketa/anketa_update.html'
+    pk_url_kwarg = 'id'
 
-def anketa_delete_view(request, id):
-    anketa = get_object_or_404(Anketa, id=id)
-    if request.method == 'POST':
-        anketa.delete()
-        return redirect('anketa_list')
-    return render(request, 'anketa/anketa_delete_confirm.html', {'anketa': anketa})
+    def get_success_url(self):
+        return reverse_lazy('anketa_detail', kwargs={'id': self.object.id})
+
+class AnketaDeleteView(DeleteView):
+    model = Anketa
+    template_name = 'anketa/anketa_delete_confirm.html'
+    pk_url_kwarg = 'id'
+    success_url = reverse_lazy('anketa_list')

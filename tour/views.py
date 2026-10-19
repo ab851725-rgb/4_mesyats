@@ -1,10 +1,13 @@
-from django.shortcuts import render, get_object_or_404
+from django.views.generic import ListView, DetailView
 from .models import Tour
 
-def tour_list_view(request):
-    tours = Tour.objects.all()
-    return render(request, 'tour/tour_list.html', {'tours': tours})
+class TourListView(ListView):
+    model = Tour
+    template_name = 'tour/tour_list.html'
+    context_object_name = 'tours'
 
-def tour_detail_view(request, id):
-    tour = get_object_or_404(Tour, id=id)
-    return render(request, 'tour/tour_detail.html', {'tour': tour})
+class TourDetailView(DetailView):
+    model = Tour
+    template_name = 'tour/tour_detail.html'
+    context_object_name = 'tour'
+    pk_url_kwarg = 'id'

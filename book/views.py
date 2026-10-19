@@ -1,38 +1,44 @@
-from django.shortcuts import render, get_object_or_404, HttpResponse
-from django.core.paginator import Paginator
+from django.views.generic import ListView, DetailView, View
+from django.shortcuts import HttpResponse
 from .models import Book
 
-def book_list_view(request):
-    search_query = request.GET.get('q', '')
-    if search_query:
-        book_list = Book.objects.filter(title__icontains=search_query).order_by('-id')
-    else:
-        book_list = Book.objects.all().order_by('-id')
+class BookListView(ListView):
+    model = Book
+    template_name = 'book/book_list.html'
+    context_object_name = 'books'
+    paginate_by = 2
 
-    paginator = Paginator(book_list, 2)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
+    def get_queryset(self):
+        query = self.request.GET.get('q', '')
+        if query:
+            return Book.objects.filter(title__icontains=query).order_by('-id')
+        return Book.objects.all().order_by('-id')
 
-    context = {
-        'books': page_obj,
-        'search_query': search_query,
-    }
-    return render(request, 'book/book_list.html', context)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['search_query'] = self.request.GET.get('q', '')
+        return context
 
-def book_detail_view(request, id):
-    book = get_object_or_404(Book, id=id)
-    book.views_count += 1
-    book.save()
-    return render(request, 'book/book_detail.html', {'book': book})
+class BookDetailView(DetailView):
+    model = Book
+    template_name = 'book/book_detail.html'
+    context_object_name = 'book'
+    pk_url_kwarg = 'id'
 
-def favourite_writer_view(request):
-    if request.method == 'GET':
+    def get_object(self, queryset=None):
+        obj = super().get_object(queryset=queryset)
+        obj.views_count += 1
+        obj.save()
+        return obj
+
+class FavouriteWriterView(View):
+    def get(self, request):
         return HttpResponse('Пушкин')
 
-def facts_about_writer_view(request):
-    if request.method == 'GET':
+class FactsAboutWriterView(View):
+    def get(self, request):
         return HttpResponse('красиво писал, был убит как гангстер в перестрелке, но не факт ведь потом появился Александр Дюма, который писал таким же слогом, и в общем его работы были крайне схожи')
 
-def my_opinion_writer_view(request):
-    if request.method == 'GET':
+class MyOpinionWriterView(View):
+    def get(self, request):
         return HttpResponse('мое мнение таково, что это одна из самых значительных фигур в поэзии того времени')

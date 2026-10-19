@@ -1,34 +1,25 @@
-from django.shortcuts import render, redirect
-from django.contrib.auth import login, logout, authenticate
-from django.contrib.auth.decorators import login_required
+from django.views.generic import CreateView, TemplateView
+from django.contrib.auth.views import LoginView, LogoutView
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.urls import reverse_lazy
 from .forms import CustomRegisterForm, CustomLoginForm
 
-def register_view(request):
-    if request.method == 'POST':
-        form = CustomRegisterForm(request.POST)
-        if form.is_valid():
-            user = form.save()
-            login(request, user)
-            return redirect('profile')
-    else:
-        form = CustomRegisterForm()
-    return render(request, 'users/register.html', {'form': form})
+class RegisterView(CreateView):
+    form_class = CustomRegisterForm
+    template_name = 'users/register.html'
+    success_url = reverse_lazy('login')
 
-def login_view(request):
-    if request.method == 'POST':
-        form = CustomLoginForm(request, data=request.POST)
-        if form.is_valid():
-            user = form.get_user()
-            login(request, user)
-            return redirect('profile')
-    else:
-        form = CustomLoginForm()
-    return render(request, 'users/login.html', {'form': form})
+class CustomLoginView(LoginView):
+    form_class = CustomLoginForm
+    template_name = 'users/login.html'
+    redirect_authenticated_user = True
 
-def logout_view(request):
-    logout(request)
-    return redirect('login')
+    def get_success_url(self):
+        return reverse_lazy('profile')
 
-@login_required(login_url='login')
-def profile_view(request):
-    return render(request, 'users/profile.html', {'user': request.user})
+class CustomLogoutView(LogoutView):
+    next_page = reverse_lazy('login')
+
+class ProfileView(LoginRequiredMixin, TemplateView):
+    template_name = 'users/profile.html'
+    login_url = reverse_lazy('login')
