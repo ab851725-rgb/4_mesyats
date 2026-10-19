@@ -10,6 +10,7 @@ class Book(models.Model):
     image_url = models.URLField(blank=True, null=True, verbose_name="Ссылка на обложку")
     is_bestseller = models.BooleanField(default=False, verbose_name="Бестселлер")
     rating = models.FloatField(default=0.0, verbose_name="Рейтинг")
+    views_count = models.PositiveIntegerField(default=0, verbose_name="Количество просмотров")
     
     GENRE_CHOICES = (
         ('FICTION', 'Художественная литература'),

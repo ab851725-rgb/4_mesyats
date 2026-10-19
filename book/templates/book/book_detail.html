@@ -6,6 +6,7 @@
 </head>
 <body>
     <h1>{{ book.title }}</h1>
+    <p><strong>👁 Просмотров:</strong> {{ book.views_count }}</p>
     <p><strong>Описание:</strong> {{ book.description }}</p>
     <p><strong>Страниц:</strong> {{ book.pages }}</p>
     <p><strong>Цена:</strong> {{ book.price }} сом</p>
@@ -16,6 +17,6 @@
     <p><strong>Жанр:</strong> {{ book.get_genre_display }}</p>
     
     <br>
-    <a href="{% url 'book_list' %}">Назад к списку книг</a>
+    <a href="{% url 'book_list' %}">← Назад к списку книг</a>
 </body>
 </html>
