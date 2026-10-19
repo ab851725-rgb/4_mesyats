@@ -10,6 +10,7 @@ urlpatterns = [
     path('', include('blog_2.urls')),
     path('', include('book.urls')),
     path('', include('myShop.urls')),
+    path('', include('tour.urls')),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ tour.title }}</title>
+</head>
+<body>
+    <h1>{{ tour.title }}</h1>
+    <p><strong>Описание:</strong> {{ tour.description }}</p>
+    <p><strong>Цена:</strong> {{ tour.price }} сом</p>
+    <p><strong>Дата старта:</strong> {{ tour.start_date }}</p>
+
+    <p><strong>Категории:</strong> 
+        {% for cat in tour.categories.all %}
+            <span>[{{ cat.name }}]</span>
+        {% empty %}
+            Не указаны
+        {% endfor %}
+    </p>
+
+    <hr>
+    <h3>Пассажир на этом туре:</h3>
+    {% if tour.passenger %}
+        <p>Пассажир: <strong>{{ tour.passenger.full_name }}</strong>, Номер билета: <strong>{{ tour.passenger.ticket_number }}</strong></p>
+    {% else %}
+        <p>На этот тур билет пока не выкуплен.</p>
+    {% endif %}
+
+    <hr>
+    <h3>Отзывы о туре:</h3>
+    <ul>
+        {% for comment in tour.comments.all %}
+            <li>
+                <strong>{{ comment.author_name }}:</strong> {{ comment.text }} 
+                <small>({{ comment.created_at|date:"d.m.Y H:i" }})</small>
+            </li>
+        {% empty %}
+            <li>Отзывов пока нет. Будьте первым!</li>
+        {% endfor %}
+    </ul>
+
+    <br>
+    <a href="{% url 'tour_list' %}">← Назад к списку туров</a>
+</body>
+</html>

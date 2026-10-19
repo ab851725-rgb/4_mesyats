@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Список туров</title>
+</head>
+<body>
+    <h1>Доступные туры</h1>
+    <ul>
+        {% for tour in tours %}
+            <li>
+                <strong>{{ tour.title }}</strong> — {{ tour.price }} сом (Старт: {{ tour.start_date }})
+                <a href="{% url 'tour_detail' tour.id %}">Подробнее</a>
+            </li>
+        {% empty %}
+            <p>Туров пока нет. Добавьте их через админку!</p>
+        {% endfor %}
+    </ul>
+</body>
+</html>
