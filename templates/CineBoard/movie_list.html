@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>CineBoard — Каталог фильмов</title>
+</head>
+<body>
+    <div>
+        {% if user.is_authenticated %}
+            <span>Вы вошли как: <strong>{{ user.username }}</strong></span> |
+            <form action="{% url 'cineboard_logout' %}" method="POST" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit">Выйти</button>
+            </form>
+        {% else %}
+            <a href="{% url 'cineboard_login' %}">Войти</a> |
+            <a href="{% url 'cineboard_register' %}">Регистрация</a>
+        {% endif %}
+    </div>
+
+    <h1>CineBoard — Каталог фильмов</h1>
+    <a href="{% url 'movie_create' %}">Добавить фильм</a>
+    <hr>
+
+    <form method="GET" action="{% url 'movie_list' %}">
+        <input type="text" name="q" value="{{ search_query }}" placeholder="Поиск фильма...">
+        <button type="submit">Найти</button>
+        {% if search_query or selected_genre %}
+            <a href="{% url 'movie_list' %}">Сбросить</a>
+        {% endif %}
+    </form>
+
+    <p>
+        <strong>Фильтр по жанрам:</strong>
+        <a href="{% url 'movie_list' %}">Все</a> |
+        {% for genre in genres %}
+            <a href="?genre={{ genre.id }}{% if search_query %}&q={{ search_query }}{% endif %}">
+                {% if selected_genre == genre.id|stringformat:"s" %}
+                    <strong>[{{ genre.name }}]</strong>
+                {% else %}
+                    {{ genre.name }}
+                {% endif %}
+            </a> |
+        {% endfor %}
+    </p>
+    <hr>
+
+    <ul>
+        {% for movie in movies %}
+            <li>
+                <h3><a href="{% url 'movie_detail' movie.id %}">{{ movie.title }} ({{ movie.release_year }})</a></h3>
+                {% if movie.photo %}
+                    <img src="{{ movie.photo.url }}" alt="{{ movie.title }}" width="150">
+                    <br>
+                {% endif %}
+                <p>Режиссер: {{ movie.director }} | Время: {{ movie.duration_minutes }} мин.</p>
+                <p>Жанры:
+                    {% for g in movie.genres.all %}
+                        <span>{{ g.name }} </span>
+                    {% empty %}
+                        Не указаны
+                    {% endfor %}
+                </p>
+                <a href="{% url 'movie_detail' movie.id %}">Детали</a> |
+                <a href="{% url 'movie_update' movie.id %}">Изменить</a> |
+                <a href="{% url 'movie_delete' movie.id %}">Удалить</a>
+            </li>
+            <hr>
+        {% empty %}
+            <p>Фильмы не найдены.</p>
+        {% endfor %}
+    </ul>
+</body>
+</html>

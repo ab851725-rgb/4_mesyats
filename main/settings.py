@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'tour',
     'anketa',
     'users',
+    'CineBoard',
 ]
 
 MIDDLEWARE = [

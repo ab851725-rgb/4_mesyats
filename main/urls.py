@@ -13,6 +13,7 @@ urlpatterns = [
     path('', include('tour.urls')),
     path('', include('anketa.urls')),
     path('', include('users.urls')),
+    path('', include('CineBoard.urls')),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
